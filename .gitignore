@@ -1,0 +1,6 @@
+.env
+.idea
+/web/schema.yaml    
+.idea/workspace.xml
+/web/node_modules
+/server/node_modules

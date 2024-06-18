@@ -1,7 +1,7 @@
 import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { Menu, XIcon } from "lucide-react";
 
 const navigation = [
   { name: "AI Chat", href: "/ai-chat", current: true },
@@ -16,8 +16,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  console.log(user);
-
   return (
     <Disclosure as="nav" className="">
       {({ open }) => (
@@ -29,9 +27,9 @@ const Navbar = () => {
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" />
+                    <XIcon className="block h-6 w-6" />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" />
+                    <Menu className="block h-6 w-6" />
                   )}
                 </Disclosure.Button>
               </div>
@@ -53,9 +51,11 @@ const Navbar = () => {
                 {user && (
                   <div className="hidden sm:block">
                     <p className="font-medium text-lg">{user.email}</p>
-                    <p className="text-right cursor-pointer" onClick={logout}>
-                      Logout
-                    </p>
+                    <div className="flex justify-end">
+                      <a className="cursor-pointer" onClick={logout}>
+                        Logout
+                      </a>
+                    </div>
                   </div>
                 )}
               </div>

@@ -22,7 +22,7 @@ const Auth = () => {
       {/* Left Side with Image and Overlay Text */}
       <div className="relative w-full h-screen lg:w-1/2 hidden lg:block">
         <img
-          src="https://i.imgur.com/0UBMg4J.png"
+          src="https://i.imgur.com/9D8eGs3.png"
           alt="Background"
           className="h-full w-full object-cover"
         />

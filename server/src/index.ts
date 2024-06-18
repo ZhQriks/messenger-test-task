@@ -28,9 +28,9 @@ app.use(cors({
   credentials: true,
 }));
 
-app.get('/api/v1/messages/:roomId', async (req, res) => {
+app.get('/api/v1/messages/:receiverId', async (req, res) => {
   try {
-    const messages = await Message.find({ roomId: req.params.roomId }).sort({ createdAt: 1 });
+    const messages = await Message.find({ receiverId: req.params.receiverId }).sort({ createdAt: 1 });
     res.json(messages);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
@@ -41,6 +41,9 @@ const usersOnline = {};
 
 io.on('connection', (socket) => {
   io.emit('users_response', roomUsers);
+  console.log('CONNECTED');
+  console.log('CONNECTED');
+
   console.log(`User Connected: ${socket.id}`);
 
   const userId = socket.handshake.query.userId;
@@ -56,8 +59,8 @@ io.on('connection', (socket) => {
     console.error('Invalid userId type:', typeof userId);
   }
 
-  socket.on('join_room', (roomId: string) => {
-    socket.join(roomId);
+  socket.on('join_room', (receiverId: string) => {
+    socket.join(receiverId);
   });
 
   socket.on('send_message', (data) => {
@@ -70,16 +73,16 @@ io.on('connection', (socket) => {
     const message = new Message({
       username: data.username,
       text: data.text,
-      roomId: data.roomId,
+      receiverId: data.receiverId,
       socketID: data.socketID,
-      messageId: data.messageId
+      senderId: data.senderId,
     });
     
     
 
     message.save()
       .then(() => {
-        io.to(data.roomId).emit('receive_message', data);
+        io.to(data.receiverId).emit('receive_message', data);
         console.log('our message',message);
       })
       .catch(err => {
@@ -88,7 +91,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('typing', (data) => {
-    socket.to(data.roomId).emit('user_typing', { userId: data.userId });
+    socket.to(data.receiverId).emit('user_typing', { userId: data.userId });
   });
 
   socket.on('disconnect', () => {
@@ -96,17 +99,17 @@ io.on('connection', (socket) => {
       usersOnline[userId] = false;
       io.emit('user_status', { userId, isOnline: false });
 
-      for (const roomId in roomUsers) {
-        const index = roomUsers[roomId].indexOf(socket.id);
+      for (const receiverId in roomUsers) {
+        const index = roomUsers[receiverId].indexOf(socket.id);
         if (index !== -1) {
-          roomUsers[roomId].splice(index, 1);
-          if (roomUsers[roomId].length === 0) {
-            delete roomUsers[roomId];
+          roomUsers[receiverId].splice(index, 1);
+          if (roomUsers[receiverId].length === 0) {
+            delete roomUsers[receiverId];
           }
-          io.to(roomId).emit('receive_message', {
+          io.to(receiverId).emit('receive_message', {
             text: 'A user left the room.',
             socketId: socket.id,
-            roomId: roomId,
+            receiverId: receiverId,
           });
         }
       }

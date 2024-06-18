@@ -1,12 +1,6 @@
 import { useState, useEffect, FC } from "react";
-import {
-  InformationCircleIcon,
-  ExclamationCircleIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/solid";
 import { Alert, AlertDescription, AlertTitle, AlertType } from "./ui/alert";
-import { XIcon } from "lucide-react";
+import { CircleCheck, Info, Octagon, TriangleAlert, XIcon } from "lucide-react";
 import { Progress } from "./ui/progress";
 import { cn } from "@/lib/utils";
 
@@ -82,17 +76,17 @@ const AlertMessage: FC<AlertMessageComponentProps> = ({
   if (!isOpen) return null;
 
   const icons = {
-    [AlertType.SUCCESS]: CheckCircleIcon,
-    [AlertType.WARNING]: ExclamationCircleIcon,
-    [AlertType.ERROR]: ExclamationTriangleIcon,
-    [AlertType.INFO]: InformationCircleIcon,
+    [AlertType.SUCCESS]: CircleCheck,
+    [AlertType.WARNING]: Octagon,
+    [AlertType.ERROR]: TriangleAlert,
+    [AlertType.INFO]: Info,
   };
 
   const IconComponent = icons[alertType];
 
   const alertClasses = cn(
     "fixed top-4 left-1/2 transform -translate-x-1/2 max-w-lg w-full", // default classes
-    className, // additional classes
+    className // additional classes
   );
 
   return (

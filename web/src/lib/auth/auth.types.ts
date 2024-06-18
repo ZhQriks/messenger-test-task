@@ -9,7 +9,7 @@ type LoginData = {
 };
 
 type UserData = {
-  id: number;
+  _id: number;
   email: string;
 };
 

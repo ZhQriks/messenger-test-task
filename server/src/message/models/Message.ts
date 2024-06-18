@@ -3,19 +3,21 @@ import mongoose, { Document, Schema } from 'mongoose';
 interface IMessage extends Document {
   username: string;
   text: string;
-  roomId: string;
   socketID: string;
   createdAt: Date;
-  messageId: string;
+  senderId: string;
+  receiverId: string;
+  read: Boolean;
 }
 
-const MessageSchema: Schema = new Schema({
+const MessageSchema = new Schema({
   username: { type: String, required: true },
   text: { type: String, required: true },
-  roomId: { type: String, required: true },
   socketID: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  messageId: { type: String, required: true },
+  senderId: { type: String, required: true },
+  receiverId: { type: String, required: true },
+  read: { type: Boolean, default: false }
 });
 
 const Message = mongoose.model<IMessage>('Message', MessageSchema);
