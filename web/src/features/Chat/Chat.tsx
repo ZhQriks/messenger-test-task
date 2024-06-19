@@ -11,7 +11,7 @@ const Chat = () => {
     <div className="flex h-[80vh] w-full">
       <UsersSidebar
         className={
-          receiverId ? "hidden md:block md:w-[450px]" : "w-max md:w-[450px]"
+          receiverId ? "hidden md:block md:w-[450px]" : "w-full lg:w-[450px]"
         }
       />
       <div
