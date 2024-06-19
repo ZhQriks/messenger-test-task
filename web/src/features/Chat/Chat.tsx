@@ -8,9 +8,11 @@ const Chat = () => {
   const { receiverId } = useParams();
 
   return (
-    <div className="flex h-[90vh] w-full">
+    <div className="flex h-[80vh] w-full">
       <UsersSidebar
-        className={receiverId ? "hidden md:block" : "w-max md:block"}
+        className={
+          receiverId ? "hidden md:block md:w-[450px]" : "w-max md:w-[450px]"
+        }
       />
       <div
         className={clsx(

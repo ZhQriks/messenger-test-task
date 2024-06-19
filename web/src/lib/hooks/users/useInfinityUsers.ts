@@ -4,13 +4,16 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 export const fetchUsers = async ({
   pageParam = 0,
+  email = '',
 }: {
   pageParam?: number;
+  email?: string; 
 }) => {
   try {
     const res = await authorizedBackendApiInstance.get('/users/', {
       params: {
         cursor: pageParam,
+        email,
       },
     });
     if (!res.data) {
@@ -28,13 +31,12 @@ export const fetchUsers = async ({
   }
 };
 
-const useInfinityUsers = () => {
+const useInfinityUsers = (email = '') => {
   return useInfiniteQuery({
-    queryKey: ['users'],
-    queryFn: fetchUsers,
+    queryKey: ['users', email],
+    queryFn: ({ pageParam = 0 }) => fetchUsers({ pageParam, email }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      console.log("+lastPage?.nextCursor", lastPage?.nextCursor, +lastPage?.nextCursor);
       return lastPage?.nextCursor ? +lastPage?.nextCursor : null
     },
   });

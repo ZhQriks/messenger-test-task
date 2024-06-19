@@ -40,7 +40,7 @@ const MessengerBody: React.FC = () => {
     <>
       <div className="border-b border-t border-gray-200 p-4">
         <div className="flex items-center gap-3">
-          <Avatar src="/placeholder-user.jpg" fallback="JD" />
+          <Avatar name={receiver?.email.slice(0, 2).toUpperCase()} />
           <div>
             <div className="font-medium">{receiver?.email}</div>
             <div className="text-sm text-gray-500">

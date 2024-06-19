@@ -460,6 +460,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@magicul/react-chat-stream@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@magicul/react-chat-stream/-/react-chat-stream-0.4.0.tgz#a85017af6328e131b82bd681b8d9f0298864e7e4"
+  integrity sha512-fTxXHScuvy8bS7PhDYeJpxdX7EVxKnZ/Qnz6KJW1fl3nU82fHKFLlyHVmvvC70zKY9YyMTXagSPafqoXv0I9TQ==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"

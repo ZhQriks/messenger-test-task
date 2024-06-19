@@ -34,17 +34,24 @@ class UserController{
   getDirectMessages = async (req, res) => {
     const cursor = req.query.cursor || 0; // Use a cursor or page parameter for pagination
     const limit = 10; // Adjust limit as necessary
+    const email = req.query.email; // Optional email query parameter
   
     try {
       const senderId = req.user.id;
-      const users = await User.find({ _id: { $ne: senderId } })
+      let usersQuery: any = { _id: { $ne: senderId } };
+  
+      if (email) {
+        usersQuery.email = { $regex: email, $options: 'i' };
+      }
+  
+      const users = await User.find(usersQuery)
         .skip(cursor * limit)
         .limit(limit);
 
-        console.log('users in globa', users);
+      console.log('users in global', users);
   
       const usersWithLastMessage = await Promise.all(users.map(async (user) => {
-        let receiverIdString = (user as any)._id.toString();
+        const receiverIdString = (user as any)._id.toString();
         const lastMessage = await Message.findOne({
           $or: [
             { senderId: senderId, receiverId: receiverIdString },
@@ -65,7 +72,6 @@ class UserController{
       res.status(500).json({ message: 'Error fetching direct messages', error });
     }
   };  
-  
   
 }
 

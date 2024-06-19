@@ -20,8 +20,7 @@ const UserPill = ({
       className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50  transition-colors cursor-pointer"
     >
       <Avatar
-        src="/placeholder-user.jpg"
-        fallback={name.slice(0, 2).toUpperCase()}
+        name={name.slice(0, 2).toUpperCase()}
       />
       <div className="flex-1">
         <div className="font-medium">{name}</div>
