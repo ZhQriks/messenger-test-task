@@ -8,10 +8,9 @@ import React, {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { SocketContext } from "@/lib/context/socket-context";
-import { Socket } from "socket.io-client";
 import { useAuth } from "@/lib/hooks/useAuth";
 import useChatSubscription from "@/lib/hooks/chat/useChatSubscription";
+import { useSocket } from "@/lib/context/socket-provider";
 
 interface ChatInputProps {
   receiverId: string;
@@ -20,22 +19,26 @@ interface ChatInputProps {
 
 const ChatInput: React.FC<ChatInputProps> = ({ receiverId }) => {
   const { user } = useAuth();
-  const { _id: userId, email } = user;
-  const socket = useContext(SocketContext) as Socket;
+  const { _id: userId, email } = user.user;
+  const socket = useSocket();
 
-  const { handleTyping, sendMessage } = useChatSubscription(user, socket);
+  const { handleTyping, sendMessage } = useChatSubscription({
+    user,
+    socket,
+    receiverId,
+  });
 
   const [message, setMessage] = useState<string>("");
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
-    handleTyping({ receiverId, userId: userId.toString() });
+    handleTyping({ userId: userId.toString() });
   };
 
   const submitMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (message.trim() && user.email) {
-      sendMessage({ email, message, receiverId, senderId: userId.toString() });
+    if (message.trim() && email) {
+      sendMessage({ email, message, senderId: userId.toString(), receiverId });
       setMessage("");
     }
   };

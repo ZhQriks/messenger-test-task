@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import UserLoginForm from "@/features/auth/user-login-form";
-import UserRegistrationForm from "@/features/auth/user-registration-form";
+import UserLoginForm from "@/features/Auth/components/user-login-form";
+import UserRegistrationForm from "./components/user-registration-form";
 
 const Auth = () => {
   const { authType } = useParams();

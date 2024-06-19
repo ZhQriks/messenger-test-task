@@ -1,29 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
 import Avatar from "@/components/avatar";
 import Message from "@/components/message";
-import { useSocket } from "@/lib/context/socket-context";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useParams } from "react-router-dom";
 import ChatInput from "./chat-input";
 import useChatSubscription from "@/lib/hooks/chat/useChatSubscription";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSocket } from "@/lib/context/socket-provider";
+import { MessageSquarePlus } from "lucide-react";
+import ChatPlaceHolder from "@/components/chat-placeholder";
+import useUser from "@/lib/hooks/users/userUser";
+import { formatTime } from "@/lib/utils";
 
 const MessengerBody: React.FC = () => {
-  const { chatId } = useParams();
+  const { receiverId } = useParams();
   const { user } = useAuth();
   const socket = useSocket();
+  const { data: receiver } = useUser(receiverId);
 
   const bottomOfMessagesRef = useRef<any>();
 
-  const { messages, isTyping, chatPartnerName, receiverId } = useChatSubscription(
+  const { messages, isTyping } = useChatSubscription({
     user,
     socket,
-    chatId
-  );
+    receiverId,
+  });
 
   useEffect(() => {
-    bottomOfMessagesRef.current.scrollIntoView({ behaviour: "smooth" });
+    if (messages && receiverId) {
+      bottomOfMessagesRef.current.scrollIntoView({ behaviour: "smooth" });
+    }
   }, [messages]);
+
+  if (!receiverId) {
+    return <ChatPlaceHolder />;
+  }
 
   return (
     <>
@@ -31,9 +42,9 @@ const MessengerBody: React.FC = () => {
         <div className="flex items-center gap-3">
           <Avatar src="/placeholder-user.jpg" fallback="JD" />
           <div>
-            <div className="font-medium">{chatPartnerName}</div>
+            <div className="font-medium">{receiver?.email}</div>
             <div className="text-sm text-gray-500">
-              {isTyping ? "Typing..." : "Online"}
+              {isTyping ? "Typing..." : "Say HII"}
             </div>
           </div>
         </div>
@@ -41,12 +52,12 @@ const MessengerBody: React.FC = () => {
 
       <ScrollArea className="flex-1 overflow-y-auto p-4">
         <div className="grid gap-4">
-          {messages.map((msg) => (
+          {messages.map((msg, key) => (
             <Message
-              key={msg._id || msg.text}
-              user={msg.user}
+              key={msg._id || key}
+              time={formatTime(msg.createdAt)}
               message={msg.text}
-              isSentByCurrentUser={msg.username == user.email}
+              isSentByCurrentUser={msg.username == user.user.email}
             />
           ))}
           <div ref={bottomOfMessagesRef}></div>

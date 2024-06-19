@@ -6,9 +6,9 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import Chat from "./pages/Chat";
-import Auth from "./pages/Auth";
-import Home from "./pages/Home";
+import Chat from "./features/Chat/Chat";
+import Auth from "./features/Auth/Auth";
+import Home from "./features/Home/Home";
 
 const DefaultRoute = () => {
   const user = useAuth()?.user;
@@ -26,7 +26,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/auth/:authType" element={<Auth />} />
       <Route path="/chat" element={<Chat />} />
-      <Route path="/chat/:chatId" element={<Chat />} />
+      <Route path="/chat/:receiverId" element={<Chat />} />
     </Route>
   )
 );

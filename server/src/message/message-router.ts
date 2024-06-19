@@ -5,6 +5,5 @@ const messageRouter = express.Router();
 const messageController = new MessageControllers();
 
 messageRouter.get('/:receiverId', messageController.getMessages);
-messageRouter.patch('/:messageId', messageController.markMessageAsRead);
 
 export default messageRouter;

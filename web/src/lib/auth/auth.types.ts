@@ -9,8 +9,12 @@ type LoginData = {
 };
 
 type UserData = {
-  _id: number;
-  email: string;
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    _id: number;
+    email: string;
+  }
 };
 
 export type { RegistrationData, LoginData, UserData };

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AuthInterceptor from "./auth.interceptor";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { LoginData, RegistrationData, UserData } from "./auth.types";
-import backendApiInstance from "@/services";
+import { backendApiInstance } from "@/services/axios";
 interface AuthContextType {
   user: UserData | null;
   register: (data: RegistrationData) => Promise<UserData>;
@@ -36,8 +36,11 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   const login = async (loginData: LoginData): Promise<UserData> => {
-    const response = await backendApiInstance.post("/login", loginData);
-    setUser(response.data.user);
+    const response = await backendApiInstance.post(
+      "/login",
+      loginData
+    );
+    setUser(response.data);
     navigate("/chat");
     return response.data;
   };

@@ -7,7 +7,7 @@ interface IMessage extends Document {
   createdAt: Date;
   senderId: string;
   receiverId: string;
-  read: Boolean;
+  roomId: string;
 }
 
 const MessageSchema = new Schema({
@@ -16,8 +16,8 @@ const MessageSchema = new Schema({
   socketID: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   senderId: { type: String, required: true },
-  receiverId: { type: String, required: true },
-  read: { type: Boolean, default: false }
+  roomId: { type: String, required: true },
+  receiverId: { type: String, required: false },
 });
 
 const Message = mongoose.model<IMessage>('Message', MessageSchema);

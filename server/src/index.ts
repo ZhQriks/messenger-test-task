@@ -7,6 +7,8 @@ import http from 'http';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import Message from './message/models/Message';
+import User from './auth/models/User';
+import mongoose from 'mongoose';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,12 +30,15 @@ app.use(cors({
   credentials: true,
 }));
 
-app.get('/api/v1/messages/:receiverId', async (req, res) => {
+app.get('/api/v1/messages/:roomId', async (req, res) => {
   try {
-    const messages = await Message.find({ receiverId: req.params.receiverId }).sort({ createdAt: 1 });
+    const roomId = req.params.roomId; 
+
+    const messages = await Message.find({ roomId: roomId }).sort({ createdAt: 1 });
     res.json(messages);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error getting messages:', error);
+    res.status(500).json({ error: 'Internal Server' });
   }
 });
 
@@ -56,11 +61,12 @@ io.on('connection', (socket) => {
       io.emit('user_status', { userId, isOnline: false });
     });
   } else {
+    console.log('user', userId);
     console.error('Invalid userId type:', typeof userId);
   }
 
-  socket.on('join_room', (receiverId: string) => {
-    socket.join(receiverId);
+  socket.on('join_room', (roomId: string) => {
+    socket.join(roomId);
   });
 
   socket.on('send_message', (data) => {
@@ -73,17 +79,17 @@ io.on('connection', (socket) => {
     const message = new Message({
       username: data.username,
       text: data.text,
-      receiverId: data.receiverId,
+      roomId: data.roomId,
       socketID: data.socketID,
       senderId: data.senderId,
+      receiverId: data.receiverId,
     });
     
     
 
     message.save()
-      .then(() => {
-        io.to(data.receiverId).emit('receive_message', data);
-        console.log('our message',message);
+      .then((message) => {
+        io.to(data.roomId).emit('receive_message', message);
       })
       .catch(err => {
         console.error('Error saving message:', err);
@@ -91,7 +97,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('typing', (data) => {
-    socket.to(data.receiverId).emit('user_typing', { userId: data.userId });
+    socket.to(data.roomId).emit('user_typing', { userId: data.userId });
   });
 
   socket.on('disconnect', () => {
@@ -99,17 +105,17 @@ io.on('connection', (socket) => {
       usersOnline[userId] = false;
       io.emit('user_status', { userId, isOnline: false });
 
-      for (const receiverId in roomUsers) {
-        const index = roomUsers[receiverId].indexOf(socket.id);
+      for (const roomId in roomUsers) {
+        const index = roomUsers[roomId].indexOf(socket.id);
         if (index !== -1) {
-          roomUsers[receiverId].splice(index, 1);
-          if (roomUsers[receiverId].length === 0) {
-            delete roomUsers[receiverId];
+          roomUsers[roomId].splice(index, 1);
+          if (roomUsers[roomId].length === 0) {
+            delete roomUsers[roomId];
           }
-          io.to(receiverId).emit('receive_message', {
+          io.to(roomId).emit('receive_message', {
             text: 'A user left the room.',
             socketId: socket.id,
-            receiverId: receiverId,
+            roomId: roomId,
           });
         }
       }

@@ -1,33 +1,11 @@
+import AuthService from "../auth/auth-service";
+import authService from "../auth/auth-service";
 import User from "../auth/models/User";
 import Message from "../message/models/Message";
 
 class UserController{
-  
-  getDirectMessages = async (req, res) => {
-    try {
-      const userId = req.params.userId;
 
-      const lastMessage = await Message.findOne({ senderId: userId })
-                                       .sort({ createdAt: -1 });
 
-      const unreadMessagesCount = await Message.countDocuments({ receiverId: userId, read: false });
-
-      const directMessages = await Message.find({
-        $or: [
-          { senderId: userId },
-          { receiverId: userId }
-        ]
-      }).sort({ createdAt: 1 });
-
-      res.status(200).json({
-        lastMessage,
-        unreadMessagesCount,
-        directMessages
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching direct messages', error });
-    }
-  };
   getAllUsers = async (req, res) => {
     try {
       const users = await User.find();
@@ -40,7 +18,6 @@ class UserController{
   getUserById = async (req, res) => {
     try {
       const userId = req.params.userId; 
-      console.log(userId);
       
       const user = await User.findById(userId);
   
@@ -53,6 +30,43 @@ class UserController{
       res.status(500).json({ message: 'Error fetching user', error });  
     }
   };
+
+  getDirectMessages = async (req, res) => {
+    const cursor = req.query.cursor || 0; // Use a cursor or page parameter for pagination
+    const limit = 10; // Adjust limit as necessary
+  
+    try {
+      const senderId = req.user.id;
+      const users = await User.find({ _id: { $ne: senderId } })
+        .skip(cursor * limit)
+        .limit(limit);
+
+        console.log('users in globa', users);
+  
+      const usersWithLastMessage = await Promise.all(users.map(async (user) => {
+        let receiverIdString = (user as any)._id.toString();
+        const lastMessage = await Message.findOne({
+          $or: [
+            { senderId: senderId, receiverId: receiverIdString },
+            { senderId: receiverIdString, receiverId: senderId }
+          ]
+        }).sort({ createdAt: -1 }).limit(1).exec();
+  
+        return {
+          user,
+          lastMessage
+        };
+      }));
+  
+      const nextCursor = users.length === limit ? cursor + 1 : null;
+  
+      res.status(200).json({ data: usersWithLastMessage, nextCursor });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching direct messages', error });
+    }
+  };  
+  
+  
 }
 
 export default UserController;

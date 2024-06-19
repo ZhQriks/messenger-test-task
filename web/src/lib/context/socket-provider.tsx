@@ -1,4 +1,3 @@
-import { BACKEND_URL } from "@/services";
 import React, {
   createContext,
   useContext,
@@ -19,7 +18,7 @@ export const SocketProvider: React.FC<PropsWithChildren<{}>> = ({
   const [socket, setSocket] = useState<Socket | null>(null);
   const { user } = useAuth();
 
-  const userId = user?._id;
+  const userId = user?.user._id;
 
   console.log("there is user ", userId);
 

@@ -2,7 +2,7 @@ import { useOutlet } from "react-router-dom";
 import { AuthProvider } from "./auth.context";
 import Layout from "@/layout/layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SocketProvider } from "../context/socket-context";
+import { SocketProvider } from "../context/socket-provider";
 
 export const AuthProvidingLayout = () => {
   const outlet = useOutlet();

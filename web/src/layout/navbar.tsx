@@ -50,7 +50,7 @@ const Navbar = () => {
                 </div>
                 {user && (
                   <div className="hidden sm:block">
-                    <p className="font-medium text-lg">{user.email}</p>
+                    <p className="font-medium text-lg">{user.user.email}</p>
                     <div className="flex justify-end">
                       <a className="cursor-pointer" onClick={logout}>
                         Logout
