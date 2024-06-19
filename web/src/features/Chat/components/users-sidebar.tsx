@@ -21,7 +21,6 @@ const UsersSidebar = ({ className }) => {
     const delayInputTimeoutId = setTimeout(() => {
       setDebouncedSearch(searchValue);
     }, 500);
-    console.log("debouncedSearch", debouncedSearch);
     return () => clearTimeout(delayInputTimeoutId);
   }, [searchValue, 500]);
 

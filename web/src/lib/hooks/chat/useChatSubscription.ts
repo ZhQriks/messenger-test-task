@@ -36,7 +36,6 @@ const useChatSubscription = ({user, socket, receiverId}: ChatSubscriptionProps) 
   }, [receiverId]);
 
   const handleTyping = (payload: handleTypingPayload) => {
-    console.log('I am typing');
     socket.emit("typing", { roomId, nowId: payload.userId });
   };
 

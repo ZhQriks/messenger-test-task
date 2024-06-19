@@ -16,7 +16,6 @@ const MessageList = ({
     }
   }, [messages]);
 
-  console.log("messages", !messages);
 
   return (
     <div className="flex-1 overflow-auto p-2">

@@ -49,7 +49,6 @@ io.on('connection', (socket) => {
   console.log('CONNECTED');
   console.log('CONNECTED');
 
-  console.log(`User Connected: ${socket.id}`);
 
   const userId = socket.handshake.query.userId;
   if (typeof userId === 'string') {
@@ -61,7 +60,6 @@ io.on('connection', (socket) => {
       io.emit('user_status', { userId, isOnline: false });
     });
   } else {
-    console.log('user', userId);
     console.error('Invalid userId type:', typeof userId);
   }
 
@@ -70,7 +68,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send_message', (data) => {
-    console.log('Message received:', data);
 
     if (!data.socketID) {
       data.socketID = socket.id;
@@ -120,7 +117,6 @@ io.on('connection', (socket) => {
         }
       }
     }
-    console.log('User Disconnected ' + socket.id);
   });
 });
 

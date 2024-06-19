@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchUser = async (userId: string): Promise<IUser> => {
   const res = await authorizedBackendApiInstance.get(`/users/${userId}`);
-  console.log("res", res);
   return res.data;
 };
 

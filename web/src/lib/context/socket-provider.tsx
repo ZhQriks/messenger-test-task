@@ -20,8 +20,6 @@ export const SocketProvider: React.FC<PropsWithChildren<{}>> = ({
 
   const userId = user?.user._id;
 
-  console.log("there is user ", userId);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const newSocket = io("http://localhost:3000", {

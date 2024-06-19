@@ -48,7 +48,6 @@ class UserController{
         .skip(cursor * limit)
         .limit(limit);
 
-      console.log('users in global', users);
   
       const usersWithLastMessage = await Promise.all(users.map(async (user) => {
         const receiverIdString = (user as any)._id.toString();

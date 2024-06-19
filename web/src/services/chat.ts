@@ -7,7 +7,6 @@ export const sendTextMessage = (chatId, text) => {
 };
 
 export const fetchChat = (chatId) => {
-console.log('trying to fetch chat')
   return authorizedBackendApiInstance.get(`/chats/${chatId}`);
 };
 
