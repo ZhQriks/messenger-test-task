@@ -1,13 +1,11 @@
-import { BACKEND_URL } from "@/services/axios";
+import { BACKEND_URL } from "@/shared";
 import useChatStream from "@magicul/react-chat-stream";
 
 const useAIChat = () => {
     const { messages, input, handleInputChange, handleSubmit, isStreaming } =
       useChatStream({
         handlers: {
-          onMessageAdded: (wtf) => {
-            console.log("wtf", wtf);
-          },
+          onMessageAdded: () => {},
         },
         options: {
           url: `${BACKEND_URL}/streamChatCompletion`,

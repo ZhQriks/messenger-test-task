@@ -1,3 +1,4 @@
+import AIChatPlaceHolder from "@/components/ai-chat-placeholder";
 import Message from "@/components/message";
 import { CardContent } from "@/components/ui/card";
 import { UseChatStreamChatMessage } from "@magicul/react-chat-stream";
@@ -15,9 +16,12 @@ const MessageList = ({
     }
   }, [messages]);
 
+  console.log("messages", !messages);
+
   return (
     <div className="flex-1 overflow-auto p-2">
       <CardContent className="space-y-4 py-6 h-[500px]" id="message-list">
+        {messages.length < 1 && <AIChatPlaceHolder />}
         {messages.map((msg, index) => (
           <Message
             key={index}

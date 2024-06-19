@@ -1,5 +1,5 @@
+import { BACKEND_URL } from '@/shared';
 import axios, { AxiosInstance } from 'axios';
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const backendApiInstance = axios.create({
   baseURL: BACKEND_URL,

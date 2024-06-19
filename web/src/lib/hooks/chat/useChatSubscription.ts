@@ -1,6 +1,6 @@
 import { UserData } from "@/lib/auth/auth.types";
 import { IMessage } from "@/lib/types/message";
-import { BACKEND_URL } from "@/services/axios";
+import { BACKEND_URL } from "@/shared";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 

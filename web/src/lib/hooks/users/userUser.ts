@@ -1,5 +1,5 @@
 import { IUser } from "@/lib/types/user";
-import { BACKEND_URL, authorizedBackendApiInstance } from "@/services/axios";
+import { authorizedBackendApiInstance } from "@/services/axios";
 import { useQuery } from "@tanstack/react-query";
 
 const fetchUser = async (userId: string): Promise<IUser> => {
