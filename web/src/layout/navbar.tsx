@@ -70,7 +70,7 @@ const Navbar = () => {
                   as="a"
                   onClick={() => navigate(item.href)}
                   className={
-                    "block rounded-md bg-purple-600 px-3 py-2 text-base font-medium text-white"
+                    "block rounded-md bg-gray-200 px-3 py-2 text-base font-medium"
                   }
                   aria-current={item.current ? "page" : undefined}
                 >
