@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
+import { BACKEND_BASE_URL } from "@/shared";
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -22,7 +23,7 @@ export const SocketProvider: React.FC<PropsWithChildren<{}>> = ({
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const newSocket = io("http://localhost:3000", {
+      const newSocket = io(BACKEND_BASE_URL, {
         autoConnect: true,
         query: { userId },
       });
