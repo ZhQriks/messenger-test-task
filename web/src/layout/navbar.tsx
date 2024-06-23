@@ -8,10 +8,6 @@ const navigation = [
   { name: "Messenger", href: "/chat", current: false },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();

@@ -15,14 +15,12 @@ import { formatTime } from "@/lib/utils";
 const MessengerBody: React.FC = () => {
   const { receiverId } = useParams();
   const { user } = useAuth();
-  const socket = useSocket();
   const { data: receiver } = useUser(receiverId);
 
   const bottomOfMessagesRef = useRef<any>();
 
   const { messages, isTyping } = useChatSubscription({
     user,
-    socket,
     receiverId,
   });
 

@@ -1,8 +1,9 @@
 import { UserData } from "@/lib/auth/auth.types";
 import { IMessage } from "@/lib/types/message";
-import { BACKEND_URL } from "@/shared";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
+import { MessengerType } from "@/lib/types/messenger";
+import { fetchMessages } from "@/services/chat";
+import socket from "@/services/socket";
+import { useEffect, useState } from "react";
 
 interface SendMessagePayload {
     email: string;
@@ -17,16 +18,15 @@ interface handleTypingPayload {
 
 interface ChatSubscriptionProps {
   user: UserData;
-  socket: Socket<any>;
   receiverId?: string;
 }
 
-const useChatSubscription = ({user, socket, receiverId}: ChatSubscriptionProps) => {
+const useChatSubscription = ({user, receiverId}: ChatSubscriptionProps) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [roomId, setRoomId] = useState<string | null>(null);
 
-  const { _id: userId, email } = user.user;
+  const { _id: userId } = user.user;
 
   useEffect(() => {
     if (receiverId) {
@@ -36,29 +36,29 @@ const useChatSubscription = ({user, socket, receiverId}: ChatSubscriptionProps) 
   }, [receiverId]);
 
   const handleTyping = (payload: handleTypingPayload) => {
-    socket.emit("typing", { roomId, nowId: payload.userId });
+    socket.emit(MessengerType.TYPING, { roomId, nowId: payload.userId });
   };
 
   const sendMessage = (payload: SendMessagePayload) => {
-      socket.emit("send_message", {
+      socket.emit(MessengerType.SEND_MESSAGE, {
         text: payload.message,
         roomId: roomId,
         senderId: payload.senderId,
         username: payload.email,
         receiverId: payload.receiverId,
     });
+    
   };
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    const getMessages = async () => {
       if (roomId) {
-        const response = await fetch(`${BACKEND_URL}/messages/${roomId}`);
-        const data = await response.json();
-        setMessages(data);
+        const messages = await fetchMessages(roomId);
+        setMessages(messages.data);
       }
     };
 
-    fetchMessages();
+    getMessages();
   }, [roomId]);
 
   useEffect(() => {
@@ -67,16 +67,16 @@ const useChatSubscription = ({user, socket, receiverId}: ChatSubscriptionProps) 
     };
 
     if (socket && roomId) {
-      socket.emit("join_room", roomId);
-      socket.on("receive_message", handleReceiveMessage);
-      socket.on("user_typing", () => {
+      socket.emit(MessengerType.JOIN_ROOM, roomId);
+      socket.on(MessengerType.RECEIVE_MESSAGE, handleReceiveMessage);
+      socket.on(MessengerType.USER_TYPING, () => {
         setIsTyping(true);
         setTimeout(() => setIsTyping(false), 3000);
       });
 
       return () => {
-        socket.off("receive_message", handleReceiveMessage);
-        socket.off("user_typing");
+        socket.off(MessengerType.RECEIVE_MESSAGE, handleReceiveMessage);
+        socket.off(MessengerType.USER_TYPING);
       };
     }
   }, [socket, roomId]);
