@@ -6,8 +6,6 @@ import { useParams } from "react-router-dom";
 import ChatInput from "./chat-input";
 import useChatSubscription from "@/lib/hooks/chat/useChatSubscription";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useSocket } from "@/lib/context/socket-provider";
-import { MessageSquarePlus } from "lucide-react";
 import ChatPlaceHolder from "@/components/chat-placeholder";
 import useUser from "@/lib/hooks/users/userUser";
 import { formatTime } from "@/lib/utils";

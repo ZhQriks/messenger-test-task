@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import useChatSubscription from "@/lib/hooks/chat/useChatSubscription";
-import { useSocket } from "@/lib/context/socket-provider";
 
 interface ChatInputProps {
   receiverId: string;
