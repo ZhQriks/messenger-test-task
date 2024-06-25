@@ -1,41 +1,29 @@
 import { BACKEND_URL } from '@/shared';
 import axios, { AxiosInstance } from 'axios';
 
-export const backendApiInstance = axios.create({
-  baseURL: BACKEND_URL,
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  }
-})
-
-export const authorizedBackendApiInstance = ((): AxiosInstance => {
+const createAxiosInstance = (): AxiosInstance => {
   const instance = axios.create({
     baseURL: BACKEND_URL,
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
     }
-  })
+  });
 
-  instance.interceptors.response.use(
-    response => response,
-    error => Promise.reject(error)
-  );
   instance.interceptors.request.use(config => {
-
     const user = localStorage.getItem('user');
-
     if (user) {
       const parsedUser = JSON.parse(user);
-      const { accessToken, csrfToken } = parsedUser;
-
-      config.headers.Authorization = `Bearer ${accessToken}`;
-      config.headers["X-CSRFToken"] = csrfToken;
+      if (parsedUser) {
+        const { accessToken, csrfToken } = parsedUser;
+        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+        if (csrfToken) config.headers["X-CSRFToken"] = csrfToken;
+      }
     }
+    return config;
+  });
 
-    return config
-  })
+  return instance;
+};
 
-  return instance
-})();
+export const backendApiInstance = createAxiosInstance();

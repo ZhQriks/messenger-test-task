@@ -36,10 +36,7 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   const login = async (loginData: LoginData): Promise<UserData> => {
-    const response = await backendApiInstance.post(
-      "/login",
-      loginData
-    );
+    const response = await backendApiInstance.post("/login", loginData);
     setUser(response.data);
     navigate("/chat");
     return response.data;

@@ -1,4 +1,4 @@
-import { authorizedBackendApiInstance } from '@/services/axios';
+import { backendApiInstance } from '@/services/axios';
 import axios from 'axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
@@ -10,7 +10,7 @@ export const fetchUsers = async ({
   email?: string; 
 }) => {
   try {
-    const res = await authorizedBackendApiInstance.get('/users/', {
+    const res = await backendApiInstance.get('/users/', {
       params: {
         cursor: pageParam,
         email,

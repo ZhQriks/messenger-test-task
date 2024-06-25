@@ -1,16 +1,9 @@
-import React, {
-  useState,
-  useContext,
-  FormEvent,
-  ChangeEvent,
-  useEffect,
-} from "react";
+import React, { useState, FormEvent, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import useChatSubscription from "@/lib/hooks/chat/useChatSubscription";
-import { useSocket } from "@/lib/context/socket-provider";
 
 interface ChatInputProps {
   receiverId: string;
@@ -20,11 +13,9 @@ interface ChatInputProps {
 const ChatInput: React.FC<ChatInputProps> = ({ receiverId }) => {
   const { user } = useAuth();
   const { _id: userId, email } = user.user;
-  const socket = useSocket();
 
   const { handleTyping, sendMessage } = useChatSubscription({
     user,
-    socket,
     receiverId,
   });
 

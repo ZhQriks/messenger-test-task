@@ -6,8 +6,6 @@ import { useParams } from "react-router-dom";
 import ChatInput from "./chat-input";
 import useChatSubscription from "@/lib/hooks/chat/useChatSubscription";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useSocket } from "@/lib/context/socket-provider";
-import { MessageSquarePlus } from "lucide-react";
 import ChatPlaceHolder from "@/components/chat-placeholder";
 import useUser from "@/lib/hooks/users/userUser";
 import { formatTime } from "@/lib/utils";
@@ -15,14 +13,12 @@ import { formatTime } from "@/lib/utils";
 const MessengerBody: React.FC = () => {
   const { receiverId } = useParams();
   const { user } = useAuth();
-  const socket = useSocket();
   const { data: receiver } = useUser(receiverId);
 
   const bottomOfMessagesRef = useRef<any>();
 
   const { messages, isTyping } = useChatSubscription({
     user,
-    socket,
     receiverId,
   });
 

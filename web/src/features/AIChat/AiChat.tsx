@@ -1,14 +1,6 @@
-import Avatar from "@/components/avatar";
-import useChatStream from "@magicul/react-chat-stream";
-import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
 import MessageList from "./components/message-list";
 import useAIChat from "@/lib/hooks/ai-chat/useAiChat";
 import ChatFooter from "./components/chat-footer";

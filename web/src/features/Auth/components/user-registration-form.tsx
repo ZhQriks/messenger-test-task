@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -18,9 +17,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/lib/hooks/useAuth";
-import useAlertMessage from "@/lib/hooks/useAlertMessage";
-import AlertMessage from "@/components/alert-message";
-import { AlertType } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   email: z.string().min(2).max(50),
@@ -34,7 +31,7 @@ export default function UserRegistrationForm({
   className,
   ...props
 }: UserRegistrationFormProps) {
-  const { showAlertMessage, hideAlertMessage, alertState } = useAlertMessage();
+  const { toast } = useToast();
 
   const auth = useAuth();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -53,14 +50,16 @@ export default function UserRegistrationForm({
         email: values.email,
         password: values.password,
       });
+      toast({
+        title: "Успешная регистрация",
+        description: "Бро все гуд",
+      });
     } catch (e: any) {
-      if (e.response.status === 400)
-        showAlertMessage(
-          "Error during registration",
-          e.response.data.message,
-          AlertType.ERROR,
-          2500
-        );
+      toast({
+        title: "Произошла ошибка",
+        description: "Ты сделал что-то не так",
+        variant: "destructive",
+      });
     }
     setIsLoading(true);
 
@@ -132,16 +131,6 @@ export default function UserRegistrationForm({
           </div>
         </form>
       </Form>
-      {alertState && (
-        <AlertMessage
-          message={alertState.message}
-          alertTitle={alertState.title}
-          alertType={alertState.type}
-          duration={alertState.duration}
-          onClose={hideAlertMessage}
-          className="top-36 lg:left-3/4"
-        />
-      )}
     </div>
   );
 }
